@@ -7,13 +7,14 @@ namespace Minecraft.Core.Entities.Player
     public class PlayerMovement : NetworkBehaviour
     {
         [SerializeField]
-        private float walkingSpeed = 5, sprintSpeed = 8;
+        private float walkingSpeed = 5, sprintSpeed = 8, jumpHeight = 1;
 
         private PlayerActions playerActions;
         private CharacterController characterController;
         private PlayerAnimationController animationController;
 
         private float currentSpeed;
+        private Vector3 playerVelocity;
 
         [SyncVar]
         private bool isSprinting;
@@ -77,17 +78,22 @@ namespace Minecraft.Core.Entities.Player
             Quaternion currentRotation = transform.rotation;
             direction = currentRotation * direction;
 
-            _ = characterController.Move(direction * currentSpeed * Time.deltaTime);
+            if (direction.sqrMagnitude != 0)
+                _ = characterController.Move(direction * currentSpeed * Time.deltaTime);
 
             animationController.SetWalking(direction.sqrMagnitude != 0);
         }
 
         private void Jump()
         {
-            if(IsJumping && characterController.isGrounded)
-            {
+            if (characterController.isGrounded && playerVelocity.y < 0)
+                playerVelocity.y = 0f;
 
-            }
+            if (IsJumping && characterController.isGrounded)
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * Physics.gravity.y);
+
+            playerVelocity += Physics.gravity * Time.deltaTime;
+            _ = characterController.Move(playerVelocity * Time.deltaTime);
         }
 
         private void OnSprintStarted(CallbackContext context)

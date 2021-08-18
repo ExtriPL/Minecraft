@@ -857,6 +857,7 @@ MonoBehaviour:
   syncInterval: 0.1
   walkingSpeed: 4
   sprintSpeed: 6
+  jumpHeight: 1
 --- !u!1 &3505147652161628645
 GameObject:
   m_ObjectHideFlags: 0
