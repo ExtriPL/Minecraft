@@ -35,6 +35,22 @@ namespace Minecraft.Core.Entities.Player
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""0416dd9a-07cd-449b-b518-a2dada09e1d1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc4c5386-9dbf-42d3-8ec4-4341aeb9115d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -96,11 +112,33 @@ namespace Minecraft.Core.Entities.Player
                 {
                     ""name"": """",
                     ""id"": ""5d9c1e2e-0fc6-4698-8dab-e882a5596bed"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard + Mouse"",
                     ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9280c765-8046-410a-a983-a46d9e20091a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard + Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""539683c7-0d0c-444f-8756-06bf7b263adf"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard + Mouse"",
+                    ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -176,6 +214,8 @@ namespace Minecraft.Core.Entities.Player
             m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
             m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
             m_Movement_Sprint = m_Movement.FindAction("Sprint", throwIfNotFound: true);
+            m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
+            m_Movement_Crouch = m_Movement.FindAction("Crouch", throwIfNotFound: true);
             // Look
             m_Look = asset.FindActionMap("Look", throwIfNotFound: true);
             m_Look_Horizontal = m_Look.FindAction("Horizontal", throwIfNotFound: true);
@@ -231,12 +271,16 @@ namespace Minecraft.Core.Entities.Player
         private IMovementActions m_MovementActionsCallbackInterface;
         private readonly InputAction m_Movement_Move;
         private readonly InputAction m_Movement_Sprint;
+        private readonly InputAction m_Movement_Jump;
+        private readonly InputAction m_Movement_Crouch;
         public struct MovementActions
         {
             private @PlayerActions m_Wrapper;
             public MovementActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Movement_Move;
             public InputAction @Sprint => m_Wrapper.m_Movement_Sprint;
+            public InputAction @Jump => m_Wrapper.m_Movement_Jump;
+            public InputAction @Crouch => m_Wrapper.m_Movement_Crouch;
             public InputActionMap Get() { return m_Wrapper.m_Movement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -252,6 +296,12 @@ namespace Minecraft.Core.Entities.Player
                     @Sprint.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
                     @Sprint.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
                     @Sprint.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
+                    @Jump.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                    @Jump.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                    @Jump.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                    @Crouch.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnCrouch;
+                    @Crouch.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnCrouch;
+                    @Crouch.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnCrouch;
                 }
                 m_Wrapper.m_MovementActionsCallbackInterface = instance;
                 if (instance != null)
@@ -262,6 +312,12 @@ namespace Minecraft.Core.Entities.Player
                     @Sprint.started += instance.OnSprint;
                     @Sprint.performed += instance.OnSprint;
                     @Sprint.canceled += instance.OnSprint;
+                    @Jump.started += instance.OnJump;
+                    @Jump.performed += instance.OnJump;
+                    @Jump.canceled += instance.OnJump;
+                    @Crouch.started += instance.OnCrouch;
+                    @Crouch.performed += instance.OnCrouch;
+                    @Crouch.canceled += instance.OnCrouch;
                 }
             }
         }
@@ -320,6 +376,8 @@ namespace Minecraft.Core.Entities.Player
         {
             void OnMove(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
+            void OnCrouch(InputAction.CallbackContext context);
         }
         public interface ILookActions
         {
