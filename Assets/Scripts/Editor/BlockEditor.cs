@@ -24,7 +24,6 @@ public class BlockEditor : Editor
 
         serializedObject.Update();
 
-        SerializedProperty blockModel = serializedObject.FindProperty("blockModel");
         base.OnInspectorGUI();
 
         if(GUI.changed)
