@@ -24,7 +24,6 @@ namespace Minecraft.Core.Blocks
             material.SetTexture("_Right", blockTexture.right);
 
             modelRenderer.material = material;
-            Debug.Log("Map");
         }
 
         private BlockTexture RetrieveBlockTexture(IObjectTexture texture)
