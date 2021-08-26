@@ -10,6 +10,7 @@ namespace Minecraft.Core.Blocks
 
         public Vector3Int Position => transform.position.GetVector3Int();
         public Block StoredBlock => storedBlock;
+        public IPlaceable StoredPlaceable => storedBlock;
 
         private ITextureMapper textureMapper;
 
@@ -18,9 +19,15 @@ namespace Minecraft.Core.Blocks
             textureMapper = GetComponent<ITextureMapper>();
         }
 
-        public void StoreBlock(Block block)
+        public void StorePlaceable(IPlaceable placeable)
         {
-            storedBlock = block;
+            if(placeable is Block block)
+            {
+                storedBlock = block;
+                return;
+            }
+
+            Debug.LogError($"BlockState::StorePlaceable: Cannot store IPlaceable which is not a Block. Registry name: {placeable.RegistryName}");
         }
     }
 }

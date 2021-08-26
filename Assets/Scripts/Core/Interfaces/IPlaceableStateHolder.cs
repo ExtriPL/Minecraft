@@ -4,6 +4,9 @@ namespace Minecraft.Core
 {
     public interface IPlaceableStateHolder
     {
-        public Vector3Int Position { get; }
+        Vector3Int Position { get; }
+        IPlaceable StoredPlaceable { get; }
+
+        void StorePlaceable(IPlaceable placeable);
     }
 }

@@ -24,7 +24,7 @@ namespace Minecraft.Core.Blocks
             textureMapper.MapTextures(Texture);
 
             BlockState state = instance.GetComponent<BlockState>();
-            state.StoreBlock(this);
+            state.StorePlaceable(this);
         }
 
         public virtual void OnPlaced(World world, Vector3Int position) { }
