@@ -1,4 +1,5 @@
 using Minecraft.Core.Textures;
+using Minecraft.Core.WorldGeneration;
 using UnityEngine;
 
 namespace Minecraft.Core.Blocks
@@ -10,9 +11,12 @@ namespace Minecraft.Core.Blocks
         private BlockTexture texture;
         [SerializeField]
         private GameObject blockModel;
+        [SerializeField]
+        private string registryName;
 
         public BlockTexture Texture => texture;
         public virtual GameObject Model => blockModel;
+        public string RegistryName => registryName;
 
         public virtual void OnInstanceCreated(GameObject instance)
         {
@@ -22,6 +26,8 @@ namespace Minecraft.Core.Blocks
             BlockState state = instance.GetComponent<BlockState>();
             state.StoreBlock(this);
         }
+
+        public virtual void OnPlaced(World world, Vector3Int position) { }
 
         public void SetTexture(BlockTexture texture)
         {
