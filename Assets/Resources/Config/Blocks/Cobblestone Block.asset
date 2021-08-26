@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f73499e8d526d4598be5531b25d540, type: 3}
+  m_Name: Cobblestone Block
+  m_EditorClassIdentifier: 
+  texture:
+    up: {fileID: 2800000, guid: c7b68b2c91c32aa4fa73022b4311b83a, type: 3}
+    down: {fileID: 2800000, guid: c7b68b2c91c32aa4fa73022b4311b83a, type: 3}
+    front: {fileID: 2800000, guid: c7b68b2c91c32aa4fa73022b4311b83a, type: 3}
+    back: {fileID: 2800000, guid: c7b68b2c91c32aa4fa73022b4311b83a, type: 3}
+    left: {fileID: 2800000, guid: c7b68b2c91c32aa4fa73022b4311b83a, type: 3}
+    right: {fileID: 2800000, guid: c7b68b2c91c32aa4fa73022b4311b83a, type: 3}
+    areAllSidesDifferent: 0
+  blockModel: {fileID: 8220855361145975516, guid: 7d9a5854456952141a6a6fe13e9ea77e, type: 3}
+  registryName: CobblestoneBlock
