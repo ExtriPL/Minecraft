@@ -5,12 +5,15 @@ namespace Minecraft.Core.WorldGeneration
     public struct ChunkData
     {
         private IPlaceable[] placedObjects;
-        private int chunkSideSize, chunkHeight;
+        private readonly int chunkSideSize, chunkHeight;
+        private readonly Vector3Int chunkPosition;
 
         public readonly int ChunkCapacity => chunkSideSize * chunkSideSize * chunkHeight;
+        public readonly Vector3Int ChunkPosition => chunkPosition;
 
-        public ChunkData(int chunkSideSize, int chunkHeight)
+        public ChunkData(Vector3Int chunkPosition, int chunkSideSize, int chunkHeight)
         {
+            this.chunkPosition = chunkPosition;
             this.chunkSideSize = chunkSideSize;
             this.chunkHeight = chunkHeight;
 
