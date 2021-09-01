@@ -2,11 +2,12 @@
 
 namespace Minecraft.Core.WorldGeneration
 {
+    [System.Serializable]
     public struct ChunkData
     {
         private IPlaceable[] placedObjects;
-        private readonly int chunkSideSize, chunkHeight;
-        private readonly Vector3Int chunkPosition;
+        private int chunkSideSize, chunkHeight;
+        private Vector3Int chunkPosition;
 
         public readonly int ChunkCapacity => chunkSideSize * chunkSideSize * chunkHeight;
         public readonly Vector3Int ChunkPosition => chunkPosition;
