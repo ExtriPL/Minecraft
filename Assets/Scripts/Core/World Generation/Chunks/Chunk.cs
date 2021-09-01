@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using Minecraft.Core.WorldGeneration.Chunks;
 
 namespace Minecraft.Core.WorldGeneration
 {
@@ -14,9 +15,15 @@ namespace Minecraft.Core.WorldGeneration
         public ChunkData Data => chunkData;
 
         private World locatedInWorld = null;
+        private ChunkPlaceableHolder placeableHolder;
         private ChunkData chunkData;
 
         private ISet<IWorldObserver> observers;
+
+        private void Awake()
+        {
+            placeableHolder = GetComponent<ChunkPlaceableHolder>();
+        }
 
         public void Create(World locatedInWorld)
         {
@@ -28,7 +35,7 @@ namespace Minecraft.Core.WorldGeneration
         public void RecreateChunk(World locatedInWorld, ChunkData chunkData)
         {
             this.locatedInWorld = locatedInWorld;
-            chunkData = new ChunkData(ChunkPosition, ChunkSideWidth, ChunkHeight);
+            this.chunkData = new ChunkData(ChunkPosition, ChunkSideWidth, ChunkHeight);
             observers = new HashSet<IWorldObserver>();
 
             //Recreating blocks
@@ -76,8 +83,7 @@ namespace Minecraft.Core.WorldGeneration
             if (!IsWithinChunk(position.GetVector3()))
                 return null;
 
-            GameObject placeableInstance = Instantiate(placeable.Model, transform);
-            placeableInstance.transform.localPosition = GetLocalPosition(position);
+            var placeableInstance = placeableHolder.SetPlaceable(placeable, GetLocalPosition(position).GetVector3Int());
             _ = chunkData.SetPlaceableAt(placeable, GetLocalPosition(position).GetVector3Int());
 
             placeable.OnInstanceCreated(placeableInstance);
@@ -90,8 +96,7 @@ namespace Minecraft.Core.WorldGeneration
             if (!IsWithinChunk(position.GetVector3()))
                 return null;
 
-            GameObject placeableInstance = Instantiate(placeable.Model, transform);
-            placeableInstance.transform.localPosition = GetLocalPosition(position);
+            var placeableInstance = placeableHolder.SetPlaceable(placeable, GetLocalPosition(position).GetVector3Int());
             _ = chunkData.SetPlaceableAt(placeable, GetLocalPosition(position).GetVector3Int());
 
             placeable.OnInstanceCreated(placeableInstance);

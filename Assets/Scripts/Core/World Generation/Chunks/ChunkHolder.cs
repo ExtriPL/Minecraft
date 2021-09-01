@@ -29,9 +29,12 @@ namespace Minecraft.Core.WorldGeneration
             {
                 for (int z = -16; z <= 16; z++)
                 {
-                    Vector3Int position = new Vector3Int(x, 0, z);
+                    for (int y = 0; y <= 0; y++)
+                    {
+                        Vector3Int position = new Vector3Int(x, y, z);
 
-                    SetPlaceable(cobblestone, position);
+                        SetPlaceable(cobblestone, position);
+                    }
                 }
             }
         }
