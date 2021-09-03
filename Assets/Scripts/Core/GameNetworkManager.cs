@@ -28,7 +28,6 @@ namespace Minecraft.Core
             if (chunkHolder.IsWorldObserverRegistered(observer))
                 return;
 
-            observer.OnObservationStarted(chunkHolder);
             chunkHolder.AddWorldObserver(observer);
         }
 
@@ -40,7 +39,6 @@ namespace Minecraft.Core
             if (chunkHolder.IsWorldObserverRegistered(observer))
                 return;
 
-            observer.OnObservationStarted(chunkHolder);
             chunkHolder.AddWorldObserver(observer);
         }
     }

@@ -13,6 +13,7 @@ namespace Minecraft.Core.WorldGeneration
 
         public Vector3Int ChunkPosition => transform.localPosition.GetVector3Int();
         public ChunkData Data => chunkData;
+        public int ObserverCount => observers.Count;
 
         private World locatedInWorld = null;
         private ChunkPlaceableHolder placeableHolder;

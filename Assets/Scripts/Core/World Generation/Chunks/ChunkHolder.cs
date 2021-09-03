@@ -1,7 +1,6 @@
 ﻿using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 namespace Minecraft.Core.WorldGeneration
 {
@@ -11,12 +10,12 @@ namespace Minecraft.Core.WorldGeneration
         private IDictionary<Vector3Int, Chunk> chunks = new Dictionary<Vector3Int, Chunk>();
         private ISet<IWorldObserver> worldObservers = new HashSet<IWorldObserver>();
         private WorldGenerator worldGenerator;
-        private World world;
+
+        #region Common
 
         private void Awake()
         {
             worldGenerator = GetComponent<WorldGenerator>();
-            world = GetComponent<World>();
         }
 
         public override void OnStartServer()
@@ -25,17 +24,13 @@ namespace Minecraft.Core.WorldGeneration
 
             IPlaceable cobblestone = (IPlaceable)RegistryManager.GetRegistryObject("CobblestoneBlock");
 
-            for (int x = -16; x <= 16; x++)
+            for(int i = 0; i < 16; i++)
             {
-                for (int z = -16; z <= 16; z++)
-                {
-                    for (int y = 0; y <= 0; y++)
-                    {
-                        Vector3Int position = new Vector3Int(x, y, z);
+                int x = Random.Range(-16, 16);
+                int y = Random.Range(0, 3);
+                int z = Random.Range(-16, 16);
 
-                        SetPlaceable(cobblestone, position);
-                    }
-                }
+                SetPlaceable(cobblestone, new Vector3Int(x, y, z));
             }
         }
 
@@ -55,6 +50,51 @@ namespace Minecraft.Core.WorldGeneration
         {
             return GetChunkAt(position).ChunkPosition;
         }
+
+        public IPlaceableStateHolder SetPlaceable(IPlaceable placeable, Vector3Int position)
+        {
+            Chunk chunk = GetChunkAt(position.GetVector3());
+
+            return chunk.SetPlaceable(placeable, position);
+        }
+
+        public IPlaceableStateHolder Place(IPlaceable placeable, Vector3Int position)
+        {
+            Chunk chunk = GetChunkAt(position.GetVector3());
+
+            return chunk.Place(placeable, position);
+        }
+
+        public void AddWorldObserver(IWorldObserver observer)
+        {
+            if (!worldObservers.Contains(observer))
+            {
+                observer.OnObservationStarted(this);
+                worldObservers.Add(observer);
+            }
+        }
+
+        public bool IsWorldObserverRegistered(IWorldObserver observer) => worldObservers.Contains(observer);
+
+        public void AddChunkObserver(Vector3Int chunkPosition, IWorldObserver observer)
+        {
+            GetChunkAt(chunkPosition).AddObserver(observer);
+        }
+
+        public void RemoveChunkObserver(Vector3Int chunkPosition, IWorldObserver observer)
+        {
+            if(!chunks.ContainsKey(chunkPosition))
+            {
+                Debug.LogError($"ChunkHolder::RemoveChunkObserver: Cannot remove observer from chunk at {chunkPosition}, because it is not loaded");
+                return;
+            }
+
+            GetChunkAt(chunkPosition).RemoveObserver(observer);
+        }
+
+        #endregion
+
+        #region Server
 
         [Server]
         public ISet<Vector3Int> GetChunkPositionsAround(Vector3 position, uint range)
@@ -82,51 +122,6 @@ namespace Minecraft.Core.WorldGeneration
             return GetChunkAt(chunkPosition.GetVector3()).Data;
         }
 
-        public void AddChunkObserver(Vector3Int chunkPosition, IWorldObserver observer)
-        {
-            GetChunkAt(chunkPosition).AddObserver(observer);
-        }
-
-        public void RemoveChunkObserver(Vector3Int chunkPosition, IWorldObserver observer)
-        {
-            GetChunkAt(chunkPosition).RemoveObserver(observer);
-        }
-
-        [Client]
-        public void LoadChunk(Vector3Int chunkPosition, IWorldObserver observer)
-        {
-            if(chunks.ContainsKey(chunkPosition))
-            {
-                var existingChunk = GetChunkAt(chunkPosition);
-                _ = existingChunk.AddObserver(observer);
-                return;
-            }
-
-            var chunk = worldGenerator.CreateChunkAt(chunkPosition);
-            chunk.AddObserver(observer);
-            chunks.Add(chunkPosition, chunk);
-        }
-
-        public IPlaceableStateHolder SetPlaceable(IPlaceable placeable, Vector3Int position)
-        {
-            Chunk chunk = GetChunkAt(position.GetVector3());
-
-            return chunk.SetPlaceable(placeable, position);
-        }
-
-        public IPlaceableStateHolder Place(IPlaceable placeable, Vector3Int position)
-        {
-            Chunk chunk = GetChunkAt(position.GetVector3());
-
-            return chunk.Place(placeable, position);
-        }
-
-        public void AddWorldObserver(IWorldObserver observer)
-        {
-            if (!worldObservers.Contains(observer))
-                worldObservers.Add(observer);
-        }
-
-        public bool IsWorldObserverRegistered(IWorldObserver observer) => worldObservers.Contains(observer);
+        #endregion
     }
 }
