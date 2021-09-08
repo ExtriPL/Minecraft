@@ -8,16 +8,13 @@ namespace Minecraft.Core
     {
         uint LoadingRange { get; }
         Vector3 Position { get; }
+        NetworkIdentity Identity { get; }
+
         void OnObservationStarted(ChunkHolder chunkHolder);
 
-        [TargetRpc]
-        void TargetSetPlaceable(Vector3Int chunkPosition, IPlaceable placeable, Vector3Int placeablePosition);
-        [TargetRpc]
-        void TargetPlace(Vector3Int chunkPosition, IPlaceable placeable, Vector3Int placeablePosition);
-
-        [TargetRpc]
-        void TargetLoadChunk(Vector3Int chunkPosition);
-        [TargetRpc]
-        void TargetUnloadChunk(Vector3Int chunkPosition);
+        void SetPlaceable(Vector3Int chunkPosition, IPlaceable placeable, Vector3Int placeablePosition);
+        void Place(Vector3Int chunkPosition, IPlaceable placeable, Vector3Int placeablePosition);
+        void LoadChunk(Vector3Int chunkPosition);
+        void UnloadChunk(Vector3Int chunkPosition);
     }
 }

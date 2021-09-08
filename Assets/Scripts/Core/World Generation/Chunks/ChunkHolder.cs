@@ -1,5 +1,6 @@
 ﻿using Mirror;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Minecraft.Core.WorldGeneration
@@ -16,22 +17,6 @@ namespace Minecraft.Core.WorldGeneration
         private void Awake()
         {
             worldGenerator = GetComponent<WorldGenerator>();
-        }
-
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
-
-            IPlaceable cobblestone = (IPlaceable)RegistryManager.GetRegistryObject("CobblestoneBlock");
-
-            for(int i = 0; i < 16; i++)
-            {
-                int x = Random.Range(-16, 16);
-                int y = Random.Range(0, 3);
-                int z = Random.Range(-16, 16);
-
-                SetPlaceable(cobblestone, new Vector3Int(x, y, z));
-            }
         }
 
         private Chunk GetChunkAt(Vector3 position)
@@ -51,36 +36,71 @@ namespace Minecraft.Core.WorldGeneration
             return GetChunkAt(position).ChunkPosition;
         }
 
-        public IPlaceableStateHolder SetPlaceable(IPlaceable placeable, Vector3Int position)
+        /// <summary>
+        /// Set IPlaceable at given position in the world.
+        /// If sync == true, sends info about setting to all other clients and server
+        /// </summary>
+        /// <returns>IPlaceableStateHolder which holds placed IPlaceable</returns>
+        public IPlaceableStateHolder SetPlaceable(IPlaceable placeable, Vector3Int position, bool sync = true)
         {
             Chunk chunk = GetChunkAt(position.GetVector3());
+
+            if (sync)
+            {
+                worldObservers.ToList().ForEach(observer =>
+                {
+                    observer.SetPlaceable(chunk.ChunkPosition, placeable, position);
+                });
+            }
 
             return chunk.SetPlaceable(placeable, position);
         }
 
-        public IPlaceableStateHolder Place(IPlaceable placeable, Vector3Int position)
+        /// <summary>
+        /// Places IPlaceable at given position in the world.
+        /// If sync == true, sends info about placing to all other clients and server
+        /// </summary>
+        /// <returns>IPlaceableStateHolder which holds placed IPlaceable</returns>
+        public IPlaceableStateHolder Place(IPlaceable placeable, Vector3Int position, bool sync = true)
         {
             Chunk chunk = GetChunkAt(position.GetVector3());
+
+            if (sync)
+            {
+                worldObservers.ToList().ForEach(observer =>
+                {
+                    observer.Place(chunk.ChunkPosition, placeable, position);
+                });
+            }
 
             return chunk.Place(placeable, position);
         }
 
+        /// <summary>
+        /// Adds IWorldObserver to registered WorldObservers
+        /// </summary>
         public void AddWorldObserver(IWorldObserver observer)
         {
             if (!worldObservers.Contains(observer))
             {
-                observer.OnObservationStarted(this);
                 worldObservers.Add(observer);
+                observer.OnObservationStarted(this);
             }
         }
 
         public bool IsWorldObserverRegistered(IWorldObserver observer) => worldObservers.Contains(observer);
 
+        /// <summary>
+        /// Adds IWorldObserver to chunk located at chunkPosition
+        /// </summary>
         public void AddChunkObserver(Vector3Int chunkPosition, IWorldObserver observer)
         {
             GetChunkAt(chunkPosition).AddObserver(observer);
         }
 
+        /// <summary>
+        /// Removes IWorldObserver from chunk present at chunkPosition
+        /// </summary>
         public void RemoveChunkObserver(Vector3Int chunkPosition, IWorldObserver observer)
         {
             if(!chunks.ContainsKey(chunkPosition))
@@ -96,6 +116,11 @@ namespace Minecraft.Core.WorldGeneration
 
         #region Server
 
+        /// <summary>
+        /// Returns positions of all chunks surrounding chunk in which is given position
+        /// </summary>
+        /// <param name="position">Given position</param>
+        /// <param name="range">Distance from center chunk</param>
         [Server]
         public ISet<Vector3Int> GetChunkPositionsAround(Vector3 position, uint range)
         {
@@ -116,6 +141,10 @@ namespace Minecraft.Core.WorldGeneration
             return chunkPositions;
         }
 
+        /// <summary>
+        /// Get chunk's data in which is given position
+        /// </summary>
+        /// <param name="chunkPosition">Given position</param>
         [Server]
         public ChunkData GetChunkData(Vector3Int chunkPosition)
         {
