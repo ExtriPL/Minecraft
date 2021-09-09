@@ -106,6 +106,11 @@ namespace Minecraft.Core.WorldGeneration
             return placeableInstance.GetComponent<IPlaceableStateHolder>();
         }
 
+        public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int position)
+        {
+            return placeableHolder.GetPlaceableStateHolder(GetLocalPosition(position).GetVector3Int());
+        }
+
         public bool IsWithinChunk(Vector3 position)
         {
             return Data.IsWithinChunkBounds(GetLocalPosition(position).GetVector3Int());

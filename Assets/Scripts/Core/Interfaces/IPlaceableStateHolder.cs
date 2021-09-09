@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Minecraft.Core.Textures;
+using UnityEngine;
 
 namespace Minecraft.Core
 {
@@ -6,6 +7,8 @@ namespace Minecraft.Core
     {
         Vector3Int Position { get; }
         IPlaceable StoredPlaceable { get; }
+        ITextureMapper TextureMapper { get; }
+        GameObject Instance { get; }
 
         void StorePlaceable(IPlaceable placeable);
     }

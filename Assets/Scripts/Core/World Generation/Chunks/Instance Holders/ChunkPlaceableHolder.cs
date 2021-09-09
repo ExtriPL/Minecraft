@@ -23,17 +23,22 @@ namespace Minecraft.Core.WorldGeneration.Chunks
             return placeableInstance;
         }
 
+        public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int localPosition)
+        {
+            if (placeableStateHolders.ContainsKey(localPosition))
+                return placeableStateHolders[localPosition];
+
+            return null;
+        }
+
         private void DestroyPlaceableStateHolder(Vector3Int localPosition)
         {
             if(placeableStateHolders.ContainsKey(localPosition))
             {
                 var placeableStateHolder = placeableStateHolders[localPosition];
 
-                if(placeableStateHolder is MonoBehaviour instance)
-                {
-                    Destroy(instance.gameObject);
-                    _ = placeableStateHolders.Remove(localPosition);
-                }
+                Destroy(placeableStateHolder.Instance);
+                _ = placeableStateHolders.Remove(localPosition);
             }
         }
     }

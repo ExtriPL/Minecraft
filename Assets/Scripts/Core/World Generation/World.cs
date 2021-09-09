@@ -51,7 +51,7 @@ namespace Minecraft.Core.WorldGeneration
 
         public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int position)
         {
-            throw new NotImplementedException();
+            return chunks.GetPlaceableStateHolder(position);
         }
     }
 }

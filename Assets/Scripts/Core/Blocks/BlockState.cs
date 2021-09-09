@@ -11,12 +11,12 @@ namespace Minecraft.Core.Blocks
         public Vector3Int Position => transform.position.GetVector3Int();
         public Block StoredBlock => storedBlock;
         public IPlaceable StoredPlaceable => storedBlock;
-
-        private ITextureMapper textureMapper;
+        public ITextureMapper TextureMapper { get; private set; }
+        public GameObject Instance => gameObject;
 
         private void Awake()
         {
-            textureMapper = GetComponent<ITextureMapper>();
+            TextureMapper = GetComponent<ITextureMapper>();
         }
 
         public void StorePlaceable(IPlaceable placeable)

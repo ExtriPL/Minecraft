@@ -9,6 +9,9 @@ namespace Minecraft.Core.WorldGeneration
     public class ChunkHolder : NetworkBehaviour
     {
         private IDictionary<Vector3Int, Chunk> chunks = new Dictionary<Vector3Int, Chunk>();
+        /// <summary>
+        /// List of observers, which will be notified, if anything in world changed
+        /// </summary>
         private ISet<IWorldObserver> worldObservers = new HashSet<IWorldObserver>();
         private WorldGenerator worldGenerator;
 
@@ -29,11 +32,6 @@ namespace Minecraft.Core.WorldGeneration
             var createdChunk = worldGenerator.CreateChunkAt(chunkPosition);
             chunks.Add(chunkPosition, createdChunk);
             return createdChunk;
-        }
-
-        private Vector3Int GetChunkPositionAt(Vector3 position)
-        {
-            return GetChunkAt(position).ChunkPosition;
         }
 
         /// <summary>
@@ -74,6 +72,13 @@ namespace Minecraft.Core.WorldGeneration
             }
 
             return chunk.Place(placeable, position);
+        }
+
+        public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int position)
+        {
+            var chunk = GetChunkAt(position);
+
+            return chunk.GetPlaceableStateHolder(position);
         }
 
         /// <summary>
@@ -125,7 +130,7 @@ namespace Minecraft.Core.WorldGeneration
         public ISet<Vector3Int> GetChunkPositionsAround(Vector3 position, uint range)
         {
             var chunkPositions = new HashSet<Vector3Int>();
-            Vector3Int centerChunkPosition = GetChunkPositionAt(position);
+            Vector3Int centerChunkPosition = Chunk.ConvertToChunkPosition(position);
 
             for(int dX = (int)-range; dX <= range; dX++)
             {
