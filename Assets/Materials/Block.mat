@@ -99,6 +99,12 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _RenderBack: 1
+    - _RenderDown: 1
+    - _RenderFront: 1
+    - _RenderLeft: 1
+    - _RenderRight: 1
+    - _RenderUp: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
