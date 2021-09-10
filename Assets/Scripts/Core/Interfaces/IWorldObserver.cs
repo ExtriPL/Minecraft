@@ -1,4 +1,5 @@
-﻿using Minecraft.Core.WorldGeneration;
+﻿using Minecraft.Core.Placeables;
+using Minecraft.Core.WorldGeneration;
 using Mirror;
 using UnityEngine;
 

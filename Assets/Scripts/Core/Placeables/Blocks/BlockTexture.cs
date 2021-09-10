@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Minecraft.Core.Blocks
+namespace Minecraft.Core.Placeables.Blocks
 {
     [System.Serializable]
     public struct BlockTexture : IObjectTexture

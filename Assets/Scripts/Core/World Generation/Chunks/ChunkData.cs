@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Minecraft.Core.Placeables;
+using UnityEngine;
 
 namespace Minecraft.Core.WorldGeneration
 {

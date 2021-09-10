@@ -1,7 +1,7 @@
 ﻿using Minecraft.Core.Textures;
 using UnityEngine;
 
-namespace Minecraft.Core
+namespace Minecraft.Core.Placeables
 {
     public interface IPlaceableStateHolder
     {

@@ -1,7 +1,7 @@
 ﻿using Minecraft.Core.Textures;
 using UnityEngine;
 
-namespace Minecraft.Core.Blocks
+namespace Minecraft.Core.Placeables.Blocks
 {
     public class BlockState : MonoBehaviour, IPlaceableStateHolder
     {

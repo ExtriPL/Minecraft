@@ -1,6 +1,6 @@
-﻿using Minecraft.Core.Blocks;
+﻿using Minecraft.Core.Placeables;
+using Minecraft.Core.Placeables.Blocks;
 using Mirror;
-using System;
 using UnityEngine;
 
 namespace Minecraft.Core.WorldGeneration

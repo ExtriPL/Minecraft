@@ -1,7 +1,8 @@
 ﻿using Minecraft.Core.Textures;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Minecraft.Core.Blocks
+namespace Minecraft.Core.Placeables.Blocks
 {
     public class BlockTextureMapper : MonoBehaviour, ITextureMapper
     {

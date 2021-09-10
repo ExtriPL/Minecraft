@@ -2,7 +2,7 @@ using Minecraft.Core.Textures;
 using Minecraft.Core.WorldGeneration;
 using UnityEngine;
 
-namespace Minecraft.Core.Blocks
+namespace Minecraft.Core.Placeables.Blocks
 {
     [CreateAssetMenu(fileName = "New Block", menuName = "CovidCraft/Blocks/Base Block")]
     public class Block : ScriptableObject, IPlaceable

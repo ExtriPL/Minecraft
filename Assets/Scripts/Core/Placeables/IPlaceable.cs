@@ -1,7 +1,7 @@
 ﻿using Minecraft.Core.WorldGeneration;
 using UnityEngine;
 
-namespace Minecraft.Core
+namespace Minecraft.Core.Placeables
 {
     public interface IPlaceable : IRegistryObject
     {

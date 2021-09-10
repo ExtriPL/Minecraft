@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Minecraft.Core.Placeables;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Minecraft.Core.WorldGeneration.Chunks
