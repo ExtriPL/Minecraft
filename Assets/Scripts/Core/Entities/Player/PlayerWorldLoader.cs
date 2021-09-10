@@ -3,6 +3,7 @@ using Mirror;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
+using Minecraft.Core.Placeables;
 
 namespace Minecraft.Core.Entities.Player
 {

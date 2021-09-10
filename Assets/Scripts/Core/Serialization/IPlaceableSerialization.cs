@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using Minecraft.Core.Placeables;
+using Mirror;
 
 namespace Minecraft.Core.Serialization
 {
