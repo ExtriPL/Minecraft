@@ -23,7 +23,6 @@ namespace Minecraft.Core.WorldGeneration
         public IPlaceableStateHolder SetPlaceable(IPlaceable placeable, Vector3Int position)
         {
             var placeableStateHolder = chunks.SetPlaceable(placeable, position);
-            UpdateNeighbourPlaceableStateHolders(placeableStateHolder, position);
 
             return placeableStateHolder;
         }
@@ -36,7 +35,6 @@ namespace Minecraft.Core.WorldGeneration
         public IPlaceableStateHolder Place(IPlaceable placeable, Vector3Int position)
         {
             var placeableStateHolder = chunks.Place(placeable, position);
-            UpdateNeighbourPlaceableStateHolders(placeableStateHolder, position);
 
             return placeableStateHolder;
         }
@@ -58,20 +56,6 @@ namespace Minecraft.Core.WorldGeneration
         public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int position)
         {
             return chunks.GetPlaceableStateHolder(position);
-        }
-
-        private void UpdateNeighbourPlaceableStateHolders(IPlaceableStateHolder placeableStateHolder, Vector3Int position)
-        {
-            var aroundPositions = position.GetAround(1);
-            
-            foreach(var neighbourPosition in aroundPositions)
-            {
-                var neighbour = GetPlaceableStateHolder(neighbourPosition);
-                var relativePosition = position - neighbourPosition;
-
-                neighbour?.StoredPlaceable.OnNeighbourChanged(this, neighbour, placeableStateHolder, relativePosition);
-                placeableStateHolder?.StoredPlaceable.OnNeighbourChanged(this, placeableStateHolder, neighbour, -relativePosition);
-            }
         }
     }
 }

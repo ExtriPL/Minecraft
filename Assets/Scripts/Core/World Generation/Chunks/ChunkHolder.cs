@@ -15,12 +15,14 @@ namespace Minecraft.Core.WorldGeneration
         /// </summary>
         private ISet<IWorldObserver> worldObservers = new HashSet<IWorldObserver>();
         private WorldGenerator worldGenerator;
+        private World world;
 
         #region Common
 
         private void Awake()
         {
             worldGenerator = GetComponent<WorldGenerator>();
+            world = GetComponent<World>();
         }
 
         private Chunk GetChunkAt(Vector3 position)
@@ -52,7 +54,10 @@ namespace Minecraft.Core.WorldGeneration
                 });
             }
 
-            return chunk.SetPlaceable(placeable, position);
+            var placeableStateHolder = chunk.SetPlaceable(placeable, position);
+            UpdateNeighbourPlaceableStateHolders(placeableStateHolder, position);
+
+            return placeableStateHolder;
         }
 
         /// <summary>
@@ -72,7 +77,10 @@ namespace Minecraft.Core.WorldGeneration
                 });
             }
 
-            return chunk.Place(placeable, position);
+            var placeableStateHolder = chunk.Place(placeable, position);
+            UpdateNeighbourPlaceableStateHolders(placeableStateHolder, position);
+
+            return placeableStateHolder;
         }
 
         public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int position)
@@ -116,6 +124,20 @@ namespace Minecraft.Core.WorldGeneration
             }
 
             GetChunkAt(chunkPosition).RemoveObserver(observer);
+        }
+
+        private void UpdateNeighbourPlaceableStateHolders(IPlaceableStateHolder placeableStateHolder, Vector3Int position)
+        {
+            var aroundPositions = position.GetAround(1);
+
+            foreach (var neighbourPosition in aroundPositions)
+            {
+                var neighbour = GetPlaceableStateHolder(neighbourPosition);
+                var relativePosition = position - neighbourPosition;
+
+                neighbour?.StoredPlaceable.OnNeighbourChanged(world, neighbour, placeableStateHolder, relativePosition);
+                placeableStateHolder?.StoredPlaceable.OnNeighbourChanged(world, placeableStateHolder, neighbour, -relativePosition);
+            }
         }
 
         #endregion
