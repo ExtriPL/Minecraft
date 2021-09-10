@@ -26,6 +26,11 @@ namespace Minecraft.Core.Blocks
             modelRenderer.material = material;
         }
 
+        public void SetSideVisibility(Vector3Int side, bool visible)
+        {
+            throw new System.NotImplementedException();
+        }
+
         private BlockTexture RetrieveBlockTexture(IObjectTexture texture)
         {
             if (texture is BlockTexture)

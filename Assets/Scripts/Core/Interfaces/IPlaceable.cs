@@ -6,8 +6,10 @@ namespace Minecraft.Core
     public interface IPlaceable : IRegistryObject
     {
         GameObject Model { get; }
+        bool IsOpaque { get; }
 
-        void OnInstanceCreated(GameObject instance);
-        void OnPlaced(World world, Vector3Int position);
+        void OnInstanceCreated(World world, IPlaceableStateHolder instance);
+        void OnPlaced(World world, IPlaceableStateHolder instance);
+        void OnNeighbourChanged(World world, IPlaceableStateHolder instance, IPlaceableStateHolder neighbourInstance, Vector3Int relativePosition);
     }
 }

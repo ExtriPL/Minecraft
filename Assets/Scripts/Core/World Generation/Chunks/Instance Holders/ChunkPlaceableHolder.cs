@@ -12,15 +12,17 @@ namespace Minecraft.Core.WorldGeneration.Chunks
             placeableStateHolders = new Dictionary<Vector3Int, IPlaceableStateHolder>();
         }
 
-        public GameObject SetPlaceable(IPlaceable placeable, Vector3Int localPosition)
+        public IPlaceableStateHolder SetPlaceable(IPlaceable placeable, Vector3Int localPosition)
         {
             DestroyPlaceableStateHolder(localPosition);
 
             GameObject placeableInstance = Instantiate(placeable.Model, transform);
             placeableInstance.transform.localPosition = localPosition;
-            placeableStateHolders.Add(localPosition, placeableInstance.GetComponent<IPlaceableStateHolder>());
+            var stateHolder = placeableInstance.GetComponent<IPlaceableStateHolder>();
 
-            return placeableInstance;
+            placeableStateHolders.Add(localPosition, stateHolder);
+
+            return stateHolder;
         }
 
         public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int localPosition)

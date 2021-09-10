@@ -87,9 +87,9 @@ namespace Minecraft.Core.WorldGeneration
             var placeableInstance = placeableHolder.SetPlaceable(placeable, GetLocalPosition(position).GetVector3Int());
             _ = chunkData.SetPlaceableAt(placeable, GetLocalPosition(position).GetVector3Int());
 
-            placeable.OnInstanceCreated(placeableInstance);
+            placeable.OnInstanceCreated(locatedInWorld, placeableInstance);
 
-            return placeableInstance.GetComponent<IPlaceableStateHolder>();
+            return placeableInstance;
         }
 
         public IPlaceableStateHolder Place(IPlaceable placeable, Vector3Int position)
@@ -100,10 +100,10 @@ namespace Minecraft.Core.WorldGeneration
             var placeableInstance = placeableHolder.SetPlaceable(placeable, GetLocalPosition(position).GetVector3Int());
             _ = chunkData.SetPlaceableAt(placeable, GetLocalPosition(position).GetVector3Int());
 
-            placeable.OnInstanceCreated(placeableInstance);
-            placeable.OnPlaced(locatedInWorld, position);
+            placeable.OnInstanceCreated(locatedInWorld, placeableInstance);
+            placeable.OnPlaced(locatedInWorld, placeableInstance);
 
-            return placeableInstance.GetComponent<IPlaceableStateHolder>();
+            return placeableInstance;
         }
 
         public IPlaceableStateHolder GetPlaceableStateHolder(Vector3Int position)
